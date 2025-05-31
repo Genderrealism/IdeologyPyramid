@@ -122,6 +122,7 @@
         }
         
         .pyramid {
+                        padding-top: 30px; /* 为敌我线留出空间 */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -188,62 +189,6 @@
             margin-right: 8px;
         }
         
-        .enemy-line {
-            position: absolute;
-            width: 100%;
-            height: 4px;
-            background-color: #e74c3c;
-            cursor: ns-resize;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform: translateY(-50%);
-        }
-        
-        .enemy-line::before {
-            content: "敌我判定标准";
-            position: absolute;
-            background-color: #e74c3c;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            transform: translateY(-50%);
-        }
-        
-        .enemy-line::after {
-            content: "盟友必须赞同此线上方的立场";
-            position: absolute;
-            background-color: #e74c3c;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            transform: translateY(calc(-50% + 20px));
-        }
-        
-        .pyramid-container {
-            position: relative;
-        }
-        
-        .enemy-line-label {
-            position: absolute;
-            right: 10px;
-            background-color: rgba(231, 76, 60, 0.2);
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            color: #e74c3c;
-        }
-        
-        /* 调整原有样式以适应新元素 */
-        .pyramid {
-            padding-top: 30px; /* 为敌我线留出空间 */
-        }
-        
         .drop-zone {
             min-height: 100px;
             margin-top: 40px;
@@ -296,7 +241,56 @@
             max-height: 500px;
             overflow-y: auto;
         }
+                .enemy-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #e74c3c;
+            cursor: ns-resize;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-50%);
+        }
         
+        .enemy-line::before {
+            content: "敌我判定标准";
+            position: absolute;
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transform: translateY(-50%);
+        }
+        
+        .enemy-line::after {
+            content: "盟友必须赞同此线上方的立场";
+            position: absolute;
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            transform: translateY(calc(-50% + 20px));
+        }
+        
+        .pyramid-container {
+            position: relative;
+        }
+        
+        .enemy-line-label {
+            position: absolute;
+            right: 10px;
+            background-color: rgba(231, 76, 60, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            color: #e74c3c;
+        }
         .category {
             margin-bottom: 15px;
             border-radius: 8px;
@@ -483,10 +477,10 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-mountain"></i> 意识形态金字塔构建工具</h1>
-            <p class="subtitle">意识形态结构与联盟政治</p>
+            <p class="subtitle">基于天主教信仰层级与拉卡托斯硬核保护带理论</p>
             <div class="description">
-                使用拖放操作将陈述分类到意识形态的三个层级：<strong>信条(Dogma)：不容变更的信念，挑战会颠覆意识形态根基</strong>、<strong>教导(Doctrine)：信条在逻辑上延伸出的主要原则</strong>和<strong>观点(Opinion)：你持有或允许存在，但和信条的逻辑联系较弱的观点</strong>。
-                拖动同盟界线，表明你认为你的意识形态盟友至少不能反对这条线上方的所有陈述。
+                使用拖放操作将陈述分类到意识形态的三个层级：<strong>信条(Dogma)</strong>、<strong>教导(Doctrine)</strong>和<strong>观点(Opinion)</strong>。
+                探索纯洁主义与大帐篷主义在联盟政治中的张力。
             </div>
         </header>
         
@@ -543,7 +537,7 @@
         </div>
         
         <footer>
-            <p>您的意识形态金字塔</p>
+            <p>基于天主教信仰层级与拉卡托斯科学研究纲领方法论 | 探索意识形态结构及其对联盟政治的影响</p>
         </footer>
     </div>
 
@@ -551,46 +545,47 @@
         // 分类数据
         const categories = [
             {
-                name: "整体理论",
+                name: "历史哲学",
                 icon: "fas fa-book",
                 statements: [
-                    "阶级斗争",
-                    "历史进步性",
-                    "文明冲突"
+                    "阶级斗争是历史发展的动力",
+                    "历史是螺旋式上升的过程",
+                    "人民群众是历史的创造者",
+                    "历史发展具有必然性",
+                    "革命是历史的火车头"
                 ]
             },
             {
                 name: "政治立场",
                 icon: "fas fa-landmark",
                 statements: [
-                    "先锋队领导",
-                    "废除国家",
-                    "多党制",
-                    "直接民主",
-                    "君主制"
+                    "先锋队领导是必要的",
+                    "无产阶级专政是过渡阶段",
+                    "多党制是民主的必要形式",
+                    "直接民主优于代议制民主",
+                    "国家终将消亡"
                 ]
             },
             {
                 name: "经济立场",
                 icon: "fas fa-chart-line",
                 statements: [
-                    "生产资料公有化",
-                    "计划经济",
-                    "市场经济",
-                    "自由贸易"
+                    "生产资料应公有化",
+                    "计划经济优于市场经济",
+                    "按劳分配是基本原则",
+                    "市场需要适度监管",
+                    "全球化加剧经济不平等"
                 ]
             },
             {
                 name: "社会立场",
                 icon: "fas fa-users",
                 statements: [
-                    "妇女解放",
-                    "LGBTQ+权益",
-                    "种族平等",
-                    "免费教育",
-                    "国教",
-                    "宗教自由",
-                    "无神论"
+                    "妇女解放是革命的重要组成部分",
+                    "LGBTQ+权益应得到保障",
+                    "种族平等是基本价值",
+                    "教育应免费且普及",
+                    "宗教是人民的鸦片"
                 ]
             },
             {
@@ -763,7 +758,8 @@
                 alert('请输入陈述内容');
             }
         }
-                function initializeEnemyLine() {
+        
+        function initializeEnemyLine() {
             const pyramidContainer = document.querySelector('.pyramid');
             
             // 创建敌我线
@@ -812,11 +808,12 @@
                 document.body.style.cursor = '';
             });
         }
-
-        // 生成截图
+        
+        // 修改截图函数以包含敌我线
         function takeScreenshot() {
             const pyramid = document.getElementById('pyramid');
             
+            // 临时显示敌我线标签
             const enemyLine = document.getElementById('enemy-line');
             const label = document.createElement('div');
             label.className = 'enemy-line-label';
@@ -835,6 +832,7 @@
                 
                 // 滚动到截图位置
                 screenshotContainer.scrollIntoView({ behavior: 'smooth' });
+            });
         }
         
         // 下载截图
