@@ -221,7 +221,7 @@
         }
         
         .statement::after {
-            content: "≡";
+            content: "";
             position: absolute;
             top: 50%;
             right: 10px;
@@ -247,6 +247,7 @@
             overflow-y: auto; /* 添加垂直滚动条 */
             flex: 1;
             min-height: 200px; /* 最小高度 */
+            max-height: 60vh; /* 新增：限制最大高度，例如视窗高度的60% */
         }
         
         .category {
@@ -445,14 +446,14 @@
             border-radius: 4px;
             font-size: 0.8rem;
             white-space: nowrap;
-            transform: translateY(calc(-50% + 20px));
+            transform: translateY(calc(-50% + 20px)); /* Adjusted to be below the first label */
         }
         
-        .pyramid-container {
+        .pyramid-container { /* This class was not used in the HTML, assuming .pyramid is the container */
             position: relative;
         }
         
-        .enemy-line-label {
+        .enemy-line-label { /* This class was for a temporary label, main labels are now ::before and ::after on .enemy-line */
             position: absolute;
             right: 10px;
             background-color: rgba(231, 76, 60, 0.2);
@@ -465,6 +466,7 @@
         /* 调整原有样式以适应新元素 */
         .pyramid {
             padding-top: 30px; /* 为敌我线留出空间 */
+            position: relative; /* Ensure it's a positioning context for enemy-line */
         }
         
         @media (max-width: 900px) {
@@ -494,7 +496,10 @@
             <p class="subtitle">信仰的层级与同盟政治</p>
             <div class="description">
                 使用拖放操作将陈述分类到意识形态的三个层级：<strong>信条(Dogma)</strong>、<strong>教导(Doctrine)</strong>和<strong>观点(Opinion)</strong>。
-                
+                信条代表意识形态的核心，不可更易，对信条的挑战就是对意识形态本身的颠覆。
+                教导是基于信条推理出的原则，实现信条的手段。
+                观点是你持有或赞成的一些观点，它们与信条的关系不那么紧密，你可以与其他不赞同你的信条，但持有类似观点的人组成潜在同盟或同路人。
+                拖动金字塔中的红色“意识形态纯洁性标准”线，标示你认为真正的同类必须赞同的最低立场范围。
             </div>
         </header>
         
@@ -503,21 +508,21 @@
                 <h2 class="section-title"><i class="fas fa-project-diagram"></i> 意识形态金字塔</h2>
                 <div class="pyramid" id="pyramid">
                     <div class="level dogma" id="dogma-level">
-                        <div class="level-title"><i class="fas fa-dot-circle"></i> 信条 (Dogma)</div>
+                        <div class="level-title"><i class="fas fa-dot-circle"></i> 信条(Dogma)</div>
                         <div class="drop-zone" id="dogma-zone">
-                            <div class="empty-placeholder">拖放核心信条到这里</div>
+                            <div class="empty-placeholder">拖放信条到这里</div>
                         </div>
                     </div>
                     <div class="level doctrine" id="doctrine-level">
-                        <div class="level-title"><i class="fas fa-shield-alt"></i> 教导 (Doctrine)</div>
+                        <div class="level-title"><i class="fas fa-shield-alt"></i> 教导(Doctrine)</div>
                         <div class="drop-zone" id="doctrine-zone">
-                            <div class="empty-placeholder">拖放可调整的教导到这里</div>
+                            <div class="empty-placeholder">拖放教导到这里</div>
                         </div>
                     </div>
                     <div class="level opinion" id="opinion-level">
-                        <div class="level-title"><i class="fas fa-comments"></i> 观点 (Opinion)</div>
+                        <div class="level-title"><i class="fas fa-comments"></i> 观点(Opinion)</div>
                         <div class="drop-zone" id="opinion-zone">
-                            <div class="empty-placeholder">拖放非核心观点到这里</div>
+                            <div class="empty-placeholder">拖放观点到这里</div>
                         </div>
                     </div>
                 </div>
@@ -527,8 +532,7 @@
                 <h2 class="section-title"><i class="fas fa-tags"></i> 陈述分类</h2>
                 <div class="statement-pool-container">
                     <div class="statement-pool" id="statement-pool">
-                        <!-- 分类将通过JavaScript添加 -->
-                    </div>
+                        </div>
                 </div>
                 
                 <div class="custom-statement">
@@ -553,7 +557,7 @@
         </div>
         
         <footer>
-            <p>基于天主教信仰层级与拉卡托斯科学研究纲领方法论 | 探索意识形态结构及其对联盟政治的影响</p>
+            <p>意识形态结构与联盟政治</p>
         </footer>
     </div>
 
@@ -561,25 +565,26 @@
         // 分类数据
         const categories = [
             {
-                name: "历史哲学",
+                name: "核心信念",
                 icon: "fas fa-book",
                 statements: [
-                    "阶级斗争是历史发展的动力",
-                    "历史是螺旋式上升的过程",
-                    "人民群众是历史的创造者",
-                    "历史发展具有必然性",
-                    "革命是历史的火车头"
+                    "阶级斗争",
+                    "推翻性别制度压迫",
+                    "历史进步必然性",
+                    "个人自由不可侵犯",
+                    "保护我们的文明和共同价值"
                 ]
             },
             {
                 name: "政治立场",
                 icon: "fas fa-landmark",
                 statements: [
-                    "先锋队领导是必要的",
-                    "无产阶级专政是过渡阶段",
-                    "多党制是民主的必要形式",
-                    "直接民主优于代议制民主",
-                    "国家终将消亡"
+                    "革命先锋队",
+                    "无产阶级专政",
+                    "多党制民主",
+                    "直接民主",
+                    "法团主义",
+                    "立刻废除国家"
                 ]
             },
             {
@@ -587,20 +592,21 @@
                 icon: "fas fa-chart-line",
                 statements: [
                     "生产资料应公有化",
-                    "计划经济优于市场经济",
-                    "按劳分配是基本原则",
-                    "市场需要适度监管",
-                    "全球化加剧经济不平等"
+                    "中央计划经济",
+                    "国家需要干涉市场",
+                    "自由市场最有效",
+                    "实现劳动合作化"
                 ]
             },
             {
                 name: "社会立场",
                 icon: "fas fa-users",
                 statements: [
-                    "妇女解放是革命的重要组成部分",
-                    "LGBTQ+权益应得到保障",
+                    "妇女解放是革命的重要部分",
+                    "保障同性恋婚姻权",
+                    "实现性别自决",
                     "种族平等是基本价值",
-                    "教育应免费且普及",
+                    "高等教育应免费且普及",
                     "宗教是人民的鸦片"
                 ]
             },
@@ -609,9 +615,11 @@
                 icon: "fas fa-globe-americas",
                 statements: [
                     "反对犹太复国主义",
-                    "支持欧洲一体化进程",
-                    "帝国主义是资本主义最高阶段",
+                    "支持欧洲一体化",
+                    "反对俄罗斯侵略乌克兰",
+                    "必须尊重现实主义权力政治",
                     "国际主义优于民族主义",
+                    "21世纪是东升西降时代",
                     "反对一切形式的殖民主义"
                 ]
             }
@@ -629,72 +637,90 @@
         
         // 初始化分类
         function initializeCategories() {
-            categories.forEach(category => {
-                // 创建分类容器
+            categories.forEach(categoryData => {
                 const categoryEl = document.createElement('div');
                 categoryEl.className = 'category';
                 
-                // 创建分类标题
                 const header = document.createElement('div');
                 header.className = 'category-header';
                 header.innerHTML = `
                     <div>
-                        <i class="${category.icon}"></i>
-                        ${category.name}
+                        <i class="${categoryData.icon}"></i>
+                        ${categoryData.name}
                     </div>
                     <i class="fas fa-chevron-down"></i>
                 `;
                 
-                // 创建分类内容
                 const content = document.createElement('div');
                 content.className = 'category-content';
                 
-                // 添加陈述到内容区
-                category.statements.forEach(statement => {
-                    createStatementElement(statement, content);
+                categoryData.statements.forEach(statementText => {
+                    if (statementText.trim() !== "") { // Ensure empty strings don't create elements
+                        createStatementElement(statementText, content);
+                    }
                 });
                 
-                // 添加点击事件以折叠/展开
                 header.addEventListener('click', () => {
                     categoryEl.classList.toggle('collapsed');
-                    const icon = header.querySelector('.fa-chevron-down');
-                    icon.classList.toggle('fa-rotate-180');
+                    const icon = header.querySelector('.fa-chevron-down, .fa-chevron-up');
+                    if (categoryEl.classList.contains('collapsed')) {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
                 });
                 
-                // 组装分类
                 categoryEl.appendChild(header);
                 categoryEl.appendChild(content);
                 statementPool.appendChild(categoryEl);
+                // Default to collapsed, except maybe the first one
+                categoryEl.classList.add('collapsed');
+
             });
             
-            // 添加自定义分类
-            const customCategory = document.createElement('div');
-            customCategory.className = 'category';
-            customCategory.id = 'custom-category';
-            
+            // Add custom category section (always visible, its content is where new statements go)
+            const customCategoryEl = document.createElement('div');
+            customCategoryEl.className = 'category'; // Use same styling
+            customCategoryEl.id = 'custom-category-container'; // Unique ID
+
             const customHeader = document.createElement('div');
             customHeader.className = 'category-header';
             customHeader.innerHTML = `
                 <div>
                     <i class="fas fa-edit"></i>
-                    自定义陈述
+                    我的自定义陈述
                 </div>
-                <i class="fas fa-chevron-down"></i>
+                <i class="fas fa-chevron-down"></i> 
             `;
             
             const customContent = document.createElement('div');
             customContent.className = 'category-content';
-            customContent.id = 'custom-statements';
-            
+            customContent.id = 'custom-statements-area'; // Target for new statements
+
             customHeader.addEventListener('click', () => {
-                customCategory.classList.toggle('collapsed');
-                const icon = customHeader.querySelector('.fa-chevron-down');
-                icon.classList.toggle('fa-rotate-180');
+                customCategoryEl.classList.toggle('collapsed');
+                const icon = customHeader.querySelector('.fa-chevron-down, .fa-chevron-up');
+                 if (customCategoryEl.classList.contains('collapsed')) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                } else {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
             });
-            
-            customCategory.appendChild(customHeader);
-            customCategory.appendChild(customContent);
-            statementPool.appendChild(customCategory);
+
+            customCategoryEl.appendChild(customHeader);
+            customCategoryEl.appendChild(customContent);
+            statementPool.appendChild(customCategoryEl);
+            customCategoryEl.classList.remove('collapsed'); // Custom category starts expanded
+             const initialCustomIcon = customHeader.querySelector('.fa-chevron-down');
+            if(initialCustomIcon) {
+                initialCustomIcon.classList.remove('fa-chevron-down');
+                initialCustomIcon.classList.add('fa-chevron-up');
+            }
+
         }
         
         // 创建陈述元素
@@ -704,7 +730,6 @@
             statement.textContent = text;
             statement.draggable = true;
             
-            // 添加拖拽事件
             statement.addEventListener('dragstart', dragStart);
             statement.addEventListener('dragend', dragEnd);
             
@@ -712,25 +737,28 @@
             return statement;
         }
         
-        // 拖拽开始
+        let draggedItem = null; // To keep track of the dragged item
+
         function dragStart(e) {
+            draggedItem = this; // `this` refers to the element being dragged
             this.classList.add('dragging');
-            e.dataTransfer.setData('text/plain', this.textContent);
+            // e.dataTransfer.setData('text/plain', this.textContent); // Data transfer is good but not strictly needed if using a global var for the element
+            e.dataTransfer.effectAllowed = 'move';
         }
         
-        // 拖拽结束
         function dragEnd() {
             this.classList.remove('dragging');
+            draggedItem = null;
         }
         
-        // 设置放置区
         function setupDropZones() {
-            const dropZones = document.querySelectorAll('.drop-zone');
+            const dropZones = document.querySelectorAll('.drop-zone, .statement-pool .category-content'); // Allow dropping back to category content
             
             dropZones.forEach(zone => {
                 zone.addEventListener('dragover', e => {
                     e.preventDefault();
                     zone.classList.add('over');
+                    e.dataTransfer.dropEffect = 'move';
                 });
                 
                 zone.addEventListener('dragleave', () => {
@@ -741,51 +769,66 @@
                     e.preventDefault();
                     zone.classList.remove('over');
                     
-                    const text = e.dataTransfer.getData('text/plain');
-                    const draggedElement = document.querySelector('.dragging');
-                    
-                    // 移除空状态提示
-                    if (zone.querySelector('.empty-placeholder')) {
-                        zone.querySelector('.empty-placeholder').remove();
+                    if (draggedItem) {
+                         // Remove placeholder if it exists in a pyramid drop-zone
+                        if (zone.classList.contains('drop-zone')) {
+                            const placeholder = zone.querySelector('.empty-placeholder');
+                            if (placeholder) {
+                                placeholder.remove();
+                            }
+                        }
+                        zone.appendChild(draggedItem); // Append the actual dragged element
                     }
-                    
-                    if (draggedElement) {
-                        // 移动现有元素
-                        zone.appendChild(draggedElement);
-                    } else {
-                        // 创建新元素
-                        createStatementElement(text, zone);
+                    // Check if pyramid drop-zone is empty after drop, if so, re-add placeholder (optional)
+                    if (zone.classList.contains('drop-zone') && zone.children.length === 0) {
+                         addEmptyPlaceholder(zone);
                     }
                 });
             });
         }
+
+        function addEmptyPlaceholder(zone) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'empty-placeholder';
+            let text = '拖放陈述到这里';
+            if (zone.id === 'dogma-zone') text = '拖放信条到这里';
+            else if (zone.id === 'doctrine-zone') text = '拖放教导到这里';
+            else if (zone.id === 'opinion-zone') text = '拖放观点到这里';
+            placeholder.textContent = text;
+            zone.appendChild(placeholder);
+        }
         
-        // 初始化敌我线
         function initializeEnemyLine() {
-            const pyramidContainer = document.querySelector('.pyramid');
+            const pyramidContainer = document.getElementById('pyramid');
             
-            // 创建敌我线
             const enemyLine = document.createElement('div');
             enemyLine.className = 'enemy-line';
             enemyLine.id = 'enemy-line';
             
-            // 初始位置设在Doctrine和Opinion之间
             const doctrineLevel = document.getElementById('doctrine-level');
-            const doctrineRect = doctrineLevel.getBoundingClientRect();
             const pyramidRect = pyramidContainer.getBoundingClientRect();
-            
-            // 设置初始位置
-            enemyLine.style.top = `${doctrineRect.bottom - pyramidRect.top - 10}px`;
+            // Initial position slightly above the bottom of the doctrine level for visibility
+            let initialTop = 0;
+            if (doctrineLevel) {
+                const doctrineRect = doctrineLevel.getBoundingClientRect();
+                 // Position between doctrine and opinion roughly
+                initialTop = (doctrineLevel.offsetTop + doctrineLevel.offsetHeight + document.getElementById('opinion-level').offsetTop) / 2 - (enemyLine.offsetHeight / 2);
+
+            } else {
+                initialTop = pyramidContainer.offsetHeight / 2; // Fallback
+            }
+             enemyLine.style.top = `${Math.max(0, initialTop)}px`; // Ensure it's not negative
+
+
             pyramidContainer.appendChild(enemyLine);
             
-            // 添加拖拽功能
             let isDragging = false;
-            let startY, startTop;
+            let startY, startTopPx;
             
             enemyLine.addEventListener('mousedown', (e) => {
                 isDragging = true;
                 startY = e.clientY;
-                startTop = parseInt(enemyLine.style.top) || 0;
+                startTopPx = enemyLine.offsetTop; // Use offsetTop relative to parent
                 document.body.style.cursor = 'ns-resize';
                 e.preventDefault();
             });
@@ -794,65 +837,88 @@
                 if (!isDragging) return;
                 
                 const deltaY = e.clientY - startY;
-                let newTop = startTop + deltaY;
+                let newTop = startTopPx + deltaY;
                 
-                // 限制移动范围在金字塔内
-                const pyramidRect = pyramidContainer.getBoundingClientRect();
-                const minTop = 0; // 金字塔顶部留白
-                const maxTop = pyramidRect.height; // 金字塔底部留白
+                const minTop = 0; 
+                const maxTop = pyramidContainer.offsetHeight - enemyLine.offsetHeight; 
                 
                 newTop = Math.max(minTop, Math.min(newTop, maxTop));
                 enemyLine.style.top = `${newTop}px`;
             });
             
             document.addEventListener('mouseup', () => {
-                isDragging = false;
-                document.body.style.cursor = '';
+                if (isDragging) {
+                    isDragging = false;
+                    document.body.style.cursor = '';
+                }
             });
         }
         
-        // 添加自定义陈述
         function addCustomStatement() {
             const text = newStatementInput.value.trim();
             if (text) {
-                const customContainer = document.getElementById('custom-statements');
+                const customContainer = document.getElementById('custom-statements-area'); // Corrected ID
                 createStatementElement(text, customContainer);
                 newStatementInput.value = '';
                 
-                // 确保自定义分类是展开的
-                document.getElementById('custom-category').classList.remove('collapsed');
+                const customCategoryEl = document.getElementById('custom-category-container');
+                if (customCategoryEl.classList.contains('collapsed')) {
+                    customCategoryEl.classList.remove('collapsed');
+                     const icon = customCategoryEl.querySelector('.category-header .fa-chevron-down');
+                    if(icon){
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                }
             } else {
                 alert('请输入陈述内容');
             }
         }
         
-        // 生成截图
         function takeScreenshot() {
-            const pyramid = document.getElementById('pyramid');
-            
-            // 临时显示敌我线标签
+            const pyramidToCapture = document.getElementById('pyramid');
+             // Temporarily hide labels on the line if they cause issues or if ::before/::after are preferred for capture
             const enemyLine = document.getElementById('enemy-line');
-            const label = document.createElement('div');
-            label.className = 'enemy-line-label';
-            label.textContent = '同类必须赞同此线上方的所有陈述';
-            enemyLine.appendChild(label);
-            
-            html2canvas(pyramid, {
+            const originalBeforeContent = window.getComputedStyle(enemyLine, '::before').content;
+            const originalAfterContent = window.getComputedStyle(enemyLine, '::after').content;
+
+            // Option 1: If ::before/::after are sufficient and capture well
+            // No change needed to enemyLine's direct children
+
+            // Option 2: If you need to ensure labels are simpler for canvas
+            // enemyLine.childNodes.forEach(node => { if(node.nodeType === Node.ELEMENT_NODE) node.style.display = 'none'; });
+            // Or simpler: enemyLine.innerHTML = ''; // if you recreate labels later or if ::before/::after are the primary display
+
+            html2canvas(pyramidToCapture, {
                 scale: 2,
-                backgroundColor: null
+                backgroundColor: getComputedStyle(document.body).getPropertyValue('background-color'), // Use page bg or specific
+                useCORS: true, // If any external images were used
+                onclone: (clonedDoc) => {
+                    // You can make modifications to the cloned document before screenshot
+                    // For example, ensure all styles are explicitly set if some are dynamic
+                    const clonedPyramid = clonedDoc.getElementById('pyramid');
+                    clonedPyramid.style.paddingTop = "30px"; // Ensure consistent padding
+                    const clonedLine = clonedDoc.getElementById('enemy-line');
+                    if (clonedLine) {
+                        // Ensure line styles are good for capture if ::before/::after are problematic
+                    }
+                }
             }).then(canvas => {
                 resultImage.src = canvas.toDataURL('image/png');
                 screenshotContainer.style.display = 'block';
                 
-                // 移除临时标签
-                enemyLine.removeChild(label);
-                
-                // 滚动到截图位置
+                // Restore line labels if they were modified
+                // enemyLine.style.setProperty('--before-content', `"${originalBeforeContent.replace(/"/g, '')}"`);
+                // enemyLine.style.setProperty('--after-content', `"${originalAfterContent.replace(/"/g, '')}"`);
+
+
                 screenshotContainer.scrollIntoView({ behavior: 'smooth' });
+            }).catch(err => {
+                console.error("Screenshot failed: ", err);
+                alert("截图失败，请查看控制台。");
             });
         }
         
-        // 下载截图
         function downloadScreenshot() {
             const link = document.createElement('a');
             link.download = '意识形态金字塔_' + new Date().toISOString().slice(0, 10) + '.png';
@@ -860,41 +926,37 @@
             link.click();
         }
         
-        // 重置金字塔
         function resetPyramid() {
-            if (confirm('确定要重置金字塔吗？所有层级中的陈述将被移回陈述池。')) {
-                // 清空所有层级的放置区
+            if (confirm('确定要重置金字塔吗？所有层级中的陈述将被移回其原始分类或自定义区域。')) {
+                // Re-initialize predefined statements to their categories
+                statementPool.innerHTML = ''; // Clear current pool
+                initializeCategories(); // This will recreate all categories and statements
+                
+                // Clear drop zones in pyramid and add placeholders
                 document.querySelectorAll('.drop-zone').forEach(zone => {
-                    while (zone.firstChild) {
-                        const statement = zone.firstChild;
-                        // 仅移动陈述元素，保留空状态提示
-                        if (statement.classList && statement.classList.contains('statement')) {
-                            // 移回自定义分类
-                            document.getElementById('custom-statements').appendChild(statement);
-                        } else {
-                            zone.removeChild(statement);
-                        }
-                    }
-                    
-                    // 添加回空状态提示
-                    if (zone.childElementCount === 0) {
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'empty-placeholder';
-                        placeholder.textContent = zone === document.getElementById('dogma-zone') 
-                            ? '拖放核心信条到这里' 
-                            : zone === document.getElementById('doctrine-zone') 
-                                ? '拖放可调整的教导到这里' 
-                                : '拖放非核心观点到这里';
-                        zone.appendChild(placeholder);
-                    }
+                    zone.innerHTML = ''; // Clear content
+                    addEmptyPlaceholder(zone);
                 });
                 
-                // 隐藏截图容器
+                // Reset enemy line position
+                 const pyramidContainer = document.getElementById('pyramid');
+                 const doctrineLevel = document.getElementById('doctrine-level');
+                 const enemyLine = document.getElementById('enemy-line');
+                 let initialTop = 0;
+                 if (doctrineLevel && enemyLine) {
+                     initialTop = (doctrineLevel.offsetTop + doctrineLevel.offsetHeight + document.getElementById('opinion-level').offsetTop) / 2 - (enemyLine.offsetHeight / 2);
+                     enemyLine.style.top = `${Math.max(0, initialTop)}px`;
+                 } else if (pyramidContainer && enemyLine) {
+                     enemyLine.style.top = `${pyramidContainer.offsetHeight / 2}px`;
+                 }
+
+
                 screenshotContainer.style.display = 'none';
+                newStatementInput.value = ''; // Clear custom input field
             }
         }
         
-        // 事件监听
+        // Event Listeners
         addStatementBtn.addEventListener('click', addCustomStatement);
         newStatementInput.addEventListener('keypress', e => {
             if (e.key === 'Enter') addCustomStatement();
@@ -903,7 +965,7 @@
         resetBtn.addEventListener('click', resetPyramid);
         downloadBtn.addEventListener('click', downloadScreenshot);
         
-        // 初始化
+        // Initialization
         window.onload = function() {
             initializeCategories();
             setupDropZones();
