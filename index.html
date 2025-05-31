@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意识形态金字塔构建工具</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --dogma-color: #e74c3c;
+            --doctrine-color: #f39c12;
+            --opinion-color: #3498db;
+            --statement-color: #2c3e50;
+            --background-color: #f5f7fa;
+            --text-color: #333;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .pyramid-container {
+            flex: 2;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .level {
+            width: 100%;
+            padding: 20px;
+            margin: 5px 0;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .level.dogma {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 2px solid var(--dogma-color);
+            z-index: 3;
+            width: 70%;
+        }
+        
+        .level.doctrine {
+            background-color: rgba(243, 156, 18, 0.1);
+            border: 2px solid var(--doctrine-color);
+            z-index: 2;
+            width: 85%;
+        }
+        
+        .level.opinion {
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 2px solid var(--opinion-color);
+            z-index: 1;
+            width: 100%;
+        }
+        
+        .level-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .level.dogma .level-title {
+            color: var(--dogma-color);
+        }
+        
+        .level.doctrine .level-title {
+            color: var(--doctrine-color);
+        }
+        
+        .level.opinion .level-title {
+            color: var(--opinion-color);
+        }
+        
+        .drop-zone {
+            min-height: 80px;
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .statement {
+            background-color: var(--statement-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: move;
+            user-select: none;
+            font-size: 0.9rem;
+            max-width: 200px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .statement:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .statement-pool {
+            background-color: rgba(127, 140, 141, 0.1);
+            border: 2px dashed #7f8c8d;
+            min-height: 150px;
+            margin-top: 10px;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-radius: 8px;
+        }
+        
+        .custom-statement {
+            margin-top: 20px;
+        }
+        
+        .custom-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1a252f;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        #screenshot-btn {
+            background-color: #27ae60;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+        }
+        
+        #screenshot-btn:hover {
+            background-color: #219653;
+        }
+        
+        #reset-btn {
+            background-color: #7f8c8d;
+        }
+        
+        #reset-btn:hover {
+            background-color: #6c7a7d;
+        }
+        
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .dragging {
+            opacity: 0.6;
+            transform: scale(1.05);
+        }
+        
+        .over {
+            background-color: rgba(52, 152, 219, 0.2) !important;
+        }
+        
+        .screenshot-container {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        #result-image {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .level {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>意识形态金字塔构建工具</h1>
+        <p class="subtitle">使用拖放操作将陈述分类到意识形态的三个层级：教条，信念与观点。</p>
+    </header>
+    
+    <div class="instructions">
+        <h3>使用说明</h3>
+        <ul>
+            <li><strong>教条(Dogma)</strong>：绝对核心，不容改变。任何挑战都会颠覆整个意识形态</li>
+            <li><strong>信念(Doctrine)</strong>：逻辑成立的教导，可以调整以保护教条</li>
+            <li><strong>观点(Opinion)</strong>：不是必然要求，但允许或经常持有的观点</li>
+            <li>将下方陈述方块拖拽到金字塔的相应层级中</li>
+            <li>创建自定义陈述并添加到金字塔中</li>
+            <li>完成后可生成截图保存您的意识形态结构</li>
+        </ul>
+    </div>
+    
+    <div class="container">
+        <div class="pyramid-container">
+            <h2>意识形态金字塔</h2>
+            <div class="pyramid" id="pyramid">
+                <div class="level dogma" id="dogma-level">
+                    <div class="level-title">信条 (Dogma)</div>
+                    <div class="drop-zone" id="dogma-zone"></div>
+                </div>
+                <div class="level doctrine" id="doctrine-level">
+                    <div class="level-title">教导 (Doctrine)</div>
+                    <div class="drop-zone" id="doctrine-zone"></div>
+                </div>
+                <div class="level opinion" id="opinion-level">
+                    <div class="level-title">观点 (Opinion)</div>
+                    <div class="drop-zone" id="opinion-zone"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <h2>陈述池</h2>
+            <div class="statement-pool" id="statement-pool">
+            </div>
+            
+            <div class="custom-statement">
+                <h3>创建自定义陈述</h3>
+                <div class="custom-input">
+                    <input type="text" id="new-statement" placeholder="输入新的陈述内容">
+                    <button id="add-statement-btn">添加</button>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="screenshot-btn">生成金字塔截图</button>
+                <button id="reset-btn">重置金字塔</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="screenshot-container" id="screenshot-container">
+        <h2>您的意识形态金字塔</h2>
+        <img id="result-image" src="" alt="意识形态金字塔截图">
+        <button id="download-btn">下载图片</button>
+    </div>
+    
+    <script>
+        // 初始陈述池内容
+        const initialStatements = [
+            "个人自由是最高价值",
+            "私有财产神圣不可侵犯",
+            "市场应完全自由不受干预",
+            "政府权力必须受到严格限制",
+            "社会契约是政府合法性的基础",
+            "平等机会比平等结果更重要",
+            "言论自由包括冒犯性言论",
+            "宗教信仰自由是基本人权",
+            "环境保护需要政府干预",
+            "最低工资是必要的",
+            "全民医疗保健是基本权利",
+            "税收应更具累进性",
+            "大学教育应免费",
+            "移民政策应更开放",
+            "死刑应被废除"
+        ];
+        
+        // DOM元素
+        const statementPool = document.getElementById('statement-pool');
+        const newStatementInput = document.getElementById('new-statement');
+        const addStatementBtn = document.getElementById('add-statement-btn');
+        const screenshotBtn = document.getElementById('screenshot-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const screenshotContainer = document.getElementById('screenshot-container');
+        const resultImage = document.getElementById('result-image');
+        
+        // 初始化陈述池
+        function initializeStatementPool() {
+            initialStatements.forEach(statement => {
+                createStatementElement(statement, statementPool);
+            });
+        }
+        
+        // 创建陈述元素
+        function createStatementElement(text, container) {
+            const statement = document.createElement('div');
+            statement.className = 'statement';
+            statement.textContent = text;
+            statement.draggable = true;
+            
+            // 添加拖拽事件
+            statement.addEventListener('dragstart', dragStart);
+            statement.addEventListener('dragend', dragEnd);
+            
+            container.appendChild(statement);
+            return statement;
+        }
+        
+        // 拖拽开始
+        function dragStart(e) {
+            this.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', this.textContent);
+        }
+        
+        // 拖拽结束
+        function dragEnd() {
+            this.classList.remove('dragging');
+        }
+        
+        // 设置放置区
+        function setupDropZones() {
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('over');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('over');
+                });
+                
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('over');
+                    
+                    const text = e.dataTransfer.getData('text/plain');
+                    const draggedElement = document.querySelector('.dragging');
+                    
+                    if (draggedElement) {
+                        // 移动现有元素
+                        zone.appendChild(draggedElement);
+                    } else {
+                        // 创建新元素
+                        createStatementElement(text, zone);
+                    }
+                });
+            });
+        }
+        
+        // 添加自定义陈述
+        function addCustomStatement() {
+            const text = newStatementInput.value.trim();
+            if (text) {
+                createStatementElement(text, statementPool);
+                newStatementInput.value = '';
+            } else {
+                alert('请输入陈述内容');
+            }
+        }
+        
+        // 生成截图
+        function takeScreenshot() {
+            const pyramid = document.getElementById('pyramid');
+            
+            html2canvas(pyramid, {
+                scale: 2,
+                backgroundColor: null
+            }).then(canvas => {
+                resultImage.src = canvas.toDataURL('image/png');
+                screenshotContainer.style.display = 'block';
+                
+                // 滚动到截图位置
+                screenshotContainer.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+        
+        // 下载截图
+        function downloadScreenshot() {
+            const link = document.createElement('a');
+            link.download = '意识形态金字塔.png';
+            link.href = resultImage.src;
+            link.click();
+        }
+        
+        // 重置金字塔
+        function resetPyramid() {
+            if (confirm('确定要重置金字塔吗？所有层级中的陈述将被移回陈述池。')) {
+                // 清空所有层级的放置区
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    while (zone.firstChild) {
+                        statementPool.appendChild(zone.firstChild);
+                    }
+                });
+                
+                // 隐藏截图容器
+                screenshotContainer.style.display = 'none';
+            }
+        }
+        
+        // 事件监听
+        addStatementBtn.addEventListener('click', addCustomStatement);
+        newStatementInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') addCustomStatement();
+        });
+        screenshotBtn.addEventListener('click', takeScreenshot);
+        resetBtn.addEventListener('click', resetPyramid);
+        downloadBtn.addEventListener('click', downloadScreenshot);
+        
+        // 初始化
+        window.onload = function() {
+            initializeStatementPool();
+            setupDropZones();
+        };
+    </script>
+</body>
+</html>
