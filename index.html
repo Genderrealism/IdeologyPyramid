@@ -511,8 +511,8 @@
         
         <div class="main-content">
             <div class="pyramid-section">
-                <h2 class="section-title"><i class="fas fa-project-diagram"></i> 意识形态金字塔</h2>
                 <div class="pyramid" id="pyramid">
+                <h2 class="section-title"><i class="fas fa-project-diagram"></i> 我的意识形态金字塔</h2>
                     <div class="level dogma" id="dogma-level">
                         <div class="level-title"><i class="fas fa-dot-circle"></i> 信条(Dogma)</div>
                         <div class="drop-zone" id="dogma-zone">
@@ -913,13 +913,6 @@
             const enemyLine = document.getElementById('enemy-line');
             const originalBeforeContent = window.getComputedStyle(enemyLine, '::before').content;
             const originalAfterContent = window.getComputedStyle(enemyLine, '::after').content;
-
-            // Option 1: If ::before/::after are sufficient and capture well
-            // No change needed to enemyLine's direct children
-
-            // Option 2: If you need to ensure labels are simpler for canvas
-            // enemyLine.childNodes.forEach(node => { if(node.nodeType === Node.ELEMENT_NODE) node.style.display = 'none'; });
-            // Or simpler: enemyLine.innerHTML = ''; // if you recreate labels later or if ::before/::after are the primary display
 
             html2canvas(pyramidToCapture, {
                 scale: 2,
